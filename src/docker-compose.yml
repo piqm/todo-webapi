@@ -1,0 +1,23 @@
+services:
+  todo.webapi:
+    image: ${DOCKER_REGISTRY-}todowebapi
+    build:
+      context: .
+      dockerfile: Todo.WebApi/Dockerfile
+    depends_on:
+      - todo-webapi.postgres
+    ports:
+      - 5000:8080
+      - 5001:8081
+
+  todo-webapi.postgres:
+    image: postgres:latest
+    container_name: todo-webapi.PostgreSql
+    environment:
+      - POSTGRES_DB=todo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
