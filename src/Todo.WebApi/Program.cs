@@ -15,6 +15,15 @@ using Todo.WebApi.Features.Roles.UseCase;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenWithAuth();
 
@@ -54,26 +63,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddScoped<RegisterUser>();
 builder.Services.AddScoped<LoginUser>();
+builder.Services.AddScoped<RegisterUser>();
+builder.Services.AddScoped<GetUser>();
+builder.Services.AddScoped<GetUsers>();
 builder.Services.AddScoped<UpdateUser>();
 builder.Services.AddScoped<DeleteUser>();
 builder.Services.AddScoped<VerifyEmail>();
-builder.Services.AddScoped<GetUser>();
 builder.Services.AddScoped<AssigningRolesToUser>();
 
 
 builder.Services.AddScoped<CreateRole>();
+builder.Services.AddScoped<GetRoles>();
 
+builder.Services.AddScoped<GetTasks>();
 builder.Services.AddScoped<CreateTask>();
 builder.Services.AddScoped<DeleteTask>();
 builder.Services.AddScoped<UpdateTask>();
+
+
 builder.Services.AddScoped<UpdateTaskStatus>();
 builder.Services.AddScoped<AssigningTasksToEmployee>();
 builder.Services.AddScoped<AssigningTasksToSupervisor>();
 
 
 WebApplication app = builder.Build();
+app.UseCors("AllowAll");
 
 if (app.Environment.IsDevelopment())
 {
@@ -91,5 +106,6 @@ TasksEndpoints.Map(app);
 app.UseAuthentication();
 
 app.UseAuthorization();
+
 
 app.Run();

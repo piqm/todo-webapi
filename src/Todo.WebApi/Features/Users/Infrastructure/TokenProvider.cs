@@ -23,16 +23,16 @@ namespace Todo.WebApi.Features.Users.Infrastructure
             };
 
 
-        if (user.UserRoles != null)
-        {
-            foreach (var userRole in user.UserRoles)
-            {
-                if (userRole.Role != null && !string.IsNullOrEmpty(userRole.Role.Name))
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name));
-                }
-            }
-        }
+        //if (user.UserRoles != null)
+        //{
+        //    foreach (var userRole in user.UserRoles)
+        //    {
+        //        if (userRole.Role != null && !string.IsNullOrEmpty(userRole.Role.Name))
+        //        {
+        //            claims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name));
+        //        }
+        //    }
+        //}
 
 
         var tokenDescriptor = new SecurityTokenDescriptor

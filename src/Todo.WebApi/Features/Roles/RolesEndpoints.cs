@@ -12,7 +12,13 @@ namespace Todo.WebApi.Features.Roles
                 .WithTags(Tag)
                 .RequireAuthorization();
 
-
+            builder.MapGet("roles", async (GetRoles useCase) =>
+            {
+                var response = await useCase.Handle();
+                return response.IsSuccess ? Results.Ok(response) : Results.BadRequest("Verification token expired");
+            })
+            .WithTags(Tag)
+            .RequireAuthorization();
 
             return builder;
         }

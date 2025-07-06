@@ -16,12 +16,16 @@ namespace Todo.WebApi.Features.Users.Infrastructure
 
         public static async Task<User?> GetByEmail(this DbSet<User> users, string email)
         {
-            return await users.SingleOrDefaultAsync(u => u.Email == email);
+            return await users
+                .Include(u => u.Roles)
+                .ThenInclude(ur => ur.Role)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(u => u.Email == email);
         }
         public static async Task<User?> GetById(this DbSet<User> users, Guid id)
         {
             return await users
-                .Include(u => u.UserRoles)
+                .Include(u => u.Roles)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(u => u.Id == id);
         }

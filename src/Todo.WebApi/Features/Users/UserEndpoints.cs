@@ -31,7 +31,7 @@ namespace Todo.WebApi.Features.Users
             builder.MapDelete("users/{id:guid}", async (Guid id, DeleteUser useCase) =>
               await useCase.Handle(id))
               .WithTags(Tag)
-              .RequireAuthorization("AdministradorOnly");
+              .RequireAuthorization();
 
             builder.MapGet("users/verify-email", async (Guid token, VerifyEmail useCase) =>
             {
@@ -47,6 +47,16 @@ namespace Todo.WebApi.Features.Users
                 GetUser.UserResponse? user = await useCase.Handle(id);
 
                 return user is not null ? Results.Ok(user) : Results.NotFound();
+            })
+            .WithTags(Tag)
+            .RequireAuthorization();
+
+            builder.MapGet("users", async (GetUsers useCase) =>
+            {
+                var response  = await useCase.Handle();
+
+                //return user is not null ? Results.Ok(user) : Results.NotFound();
+                return response.IsSuccess ? Results.Ok(response) : Results.BadRequest("Verification token expired");
             })
             .WithTags(Tag)
             .RequireAuthorization();

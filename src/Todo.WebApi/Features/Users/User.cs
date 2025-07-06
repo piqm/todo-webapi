@@ -10,6 +10,8 @@ namespace Todo.WebApi.Features.Users
         public string LastName { get; set; }
         public string PasswordHash { get; set; }
         public bool EmailVerified { get; set; }
-        public IEnumerable<UserRole> UserRoles { get; set; } = [];
+        //public IEnumerable<UserRole> UserRoles { get; set; } = [];
+
+        public IEnumerable<UserRole> Roles { get; set; } = new List<UserRole>();
     }
 }
