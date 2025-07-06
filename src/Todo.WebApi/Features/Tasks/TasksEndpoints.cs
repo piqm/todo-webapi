@@ -1,6 +1,8 @@
 ﻿
 
+using Microsoft.AspNetCore.Mvc;
 using Todo.WebApi.Features.Tasks.UseCase;
+using Todo.WebApi.Features.Users.UseCase;
 
 namespace Todo.WebApi.Features.Tasks
 {
@@ -9,6 +11,27 @@ namespace Todo.WebApi.Features.Tasks
         private const string Tag = "Taks";
         public static IEndpointRouteBuilder Map(IEndpointRouteBuilder builder)
         {
+            builder.MapGet("tasks/user/{id:guid}", async (
+                Guid id,
+                GetTasks useCase,
+                [FromQuery] int pageNumber = 1,
+                [FromQuery] int pageSize = 10) =>
+            {
+                var result = await useCase.Handle(id, pageNumber, pageSize);
+                
+
+                if (result.IsFailure)
+                {
+                    return Results.BadRequest(result.Errors);
+                }
+
+                return Results.Ok(result.Value);
+
+
+            })
+            .WithTags(Tag)
+            .RequireAuthorization();
+
             builder.MapPost("tasks", async (CreateTask.Request request, CreateTask useCase) =>
                 await useCase.Handle(request))
                 .WithTags(Tag)
